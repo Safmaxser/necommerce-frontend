@@ -1,6 +1,8 @@
 on:
-  schedule:
-    - cron:  '0 13 * * *'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 name: Depscan
 jobs:
   depscan:
