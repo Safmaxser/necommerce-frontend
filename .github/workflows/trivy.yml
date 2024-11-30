@@ -1,9 +1,16 @@
 name: build
 on:
+  workflow_dispatch: {}
+  pull_request: {}
   push:
     branches:
-      - main
-  pull_request:
+    - main
+    - master
+    paths:
+    - .github/workflows/trivy.yml
+  schedule:
+  # random HH:MM to avoid a load spike on GitHub Actions at 00:00
+  - cron: 23 13 * * *
 jobs:
   build:
     name: Build
