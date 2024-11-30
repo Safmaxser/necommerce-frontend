@@ -13,19 +13,16 @@ on:
 name: Depscan
 jobs:
   depscan:
-    name: depscan/ci
+    name: depscan    
     runs-on: ubuntu-20.04
-    env:
-        VDB_HOME: ${{ github.workspace }}/db
-        GITHUB_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     steps:
-    - uses: actions/checkout@v4
     - uses: AppThreat/dep-scan-action@master
       with:
-        # The target directory to be scanned. Optional.
-        src: /github/workspa
-        # Output file for the generated report. Optional.
-        report_file: /github/workspace/reports/depscan.json
-        # Must equal "I have sponsored OWASP-dep-scan" for action to run. Required.
-        profile: generic
-        thank_you: "I have not sponsored OWASP-dep-scan."
+          thank_you: "I have sponsored OWASP-dep-scan."
+      env:
+        VDB_HOME: ${{ github.workspace }}/db
+        GITHUB_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: reports
+        path: reports      
