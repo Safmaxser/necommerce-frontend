@@ -1,16 +1,25 @@
 on:
+  workflow_dispatch: {}
+  pull_request: {}
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+    - main
+    - master
+    paths:
+    - .github/workflows/semgrep.yml
   schedule:
-    - cron:  '0 13 * * *'
+  # random HH:MM to avoid a load spike on GitHub Actions at 00:00
+  - cron: 23 13 * * *
 name: Depscan
 jobs:
   depscan:
     name: depscan/ci
     runs-on: ubuntu-20.04
+    env:
+        VDB_HOME: ${{ github.workspace }}/db
+        GITHUB_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     steps:
+    - uses: actions/checkout@v4
     - uses: AppThreat/dep-scan-action@master
       with:
         # The target directory to be scanned. Optional.
@@ -20,6 +29,3 @@ jobs:
         # Must equal "I have sponsored OWASP-dep-scan" for action to run. Required.
         profile: generic
         thank_you: "I have not sponsored OWASP-dep-scan."
-      env:
-        VDB_HOME: ${{ github.workspace }}/db
-        GITHUB_TOKEN: ${{ secrets.DEPSCAN_APP_TOKEN }}
